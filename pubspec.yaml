@@ -14,10 +14,9 @@ dependencies:
 
   # UI
   cupertino_icons: ^1.0.8
-
-  # BLoC & utilidades
-  flutter_bloc: ^9.0.0
-  equatable: ^2.0.5
+  http: ^1.5.0
+  flutter_bloc: ^9.1.1
+  bloc: ^9.1.0
 
 dev_dependencies:
   flutter_test:

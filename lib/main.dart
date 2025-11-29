@@ -30,7 +30,7 @@ class JameoFitApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.background,
         ),
         // ✅ Aquí definimos solo initialRoute y routes
-        initialRoute: AppRoutes.welcome,
+        initialRoute: AppRoutes.patientsListScreen,
         routes: AppRoutes.routes,
       ),
     );
