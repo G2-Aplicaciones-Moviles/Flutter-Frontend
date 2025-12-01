@@ -1,62 +1,73 @@
 import 'package:flutter/material.dart';
 
-// IAM (backend real)
-import '../Nutritionists/presentation/bloc/nutritionist_bloc.dart';
+// IAM
 import '../iam/presentation/pages/login_page.dart';
 import '../iam/presentation/pages/register_page.dart';
 import '../iam/presentation/pages/welcome_page.dart';
 
+// Nutritionists
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../Nutritionists/presentation/bloc/nutritionist_bloc.dart';
-
-
-// Nutritionists
 import '../Nutritionists/presentation/pages/create_nutritionist_profile_page.dart';
 
 // Patients
 import '../Patients/presentation/pages/PatientsListScreen.dart';
-import '../Patients/presentation/pages/PatientsDetailScreen.dart';
-import '../Patients/data/models/NutritionistPatientModel.dart';
+
+// HOME LAYOUT
+import '../screens/home/main_layout.dart';
 
 class AppRoutes {
-  // ROUTE NAMES
   static const String welcome = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String home = '/home';
-
   static const String nutritionistProfile = '/nutritionist-profile';
   static const String patientsList = '/patients-list';
-  static const String patientsDetail = '/patients-detail';
 
-  // ROUTER TABLE
   static final Map<String, WidgetBuilder> routes = {
     welcome: (_) => const WelcomePage(),
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
 
-    // Pantalla Home (lista de pacientes)
-    home: (_) => const PatientsListScreen(),
+    // HOME que recibe userId
+    home: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
 
-    // Perfil de nutricionista (primer ingreso)
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: userId no recibido en Home",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return MainLayout(userId: args);
+    },
+
+    // CREAR PERFIL NUTRICIONISTA
     nutritionistProfile: (context) {
-      final userId = ModalRoute.of(context)!.settings.arguments as int;
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: userId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
 
       return BlocProvider(
         create: (_) => NutritionistBloc(),
-        child: CreateNutritionistProfilePage(userId: userId),
+        child: CreateNutritionistProfilePage(userId: args),
       );
     },
 
-
-    // Lista de pacientes
     patientsList: (_) => const PatientsListScreen(),
-
-    // Detalle del paciente
-    //patientsDetail: (context) {
-      //final patient = ModalRoute.of(context)!.settings.arguments
-      //as NutritionistPatientModel;
-      //return PatientsDetailScreen(paciente: patient);
-    //},
   };
 }

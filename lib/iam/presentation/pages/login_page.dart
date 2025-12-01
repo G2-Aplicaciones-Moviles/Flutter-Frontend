@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 arguments: userId,
               );
             } else {
-              Navigator.pushReplacementNamed(context, "/home");
+              Navigator.pushReplacementNamed(context, "/home", arguments: userId,);
             }
           }
 
