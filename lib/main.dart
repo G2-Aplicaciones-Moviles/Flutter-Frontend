@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/auth/auth_bloc.dart';
-import 'bloc/auth/auth_event.dart';
-import 'bloc/auth/auth_state.dart';
-import 'core/repositories/auth_repository.dart';
+import 'iam/presentation/bloc/auth_bloc.dart';
 import 'routes/app_routes.dart';
-import 'screens/home/home_screen.dart';
-import 'screens/onboarding/welcome_screen.dart';
 import 'core/constants/colors.dart';
 
 void main() {
@@ -18,10 +13,13 @@ class JameoFitApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authRepo = AuthRepository();
 
-    return BlocProvider(
-      create: (_) => AuthBloc(authRepo)..add(AppStarted()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(),
+        ),
+      ],
       child: MaterialApp(
         title: 'JameoFit',
         debugShowCheckedModeBanner: false,
@@ -29,8 +27,7 @@ class JameoFitApp extends StatelessWidget {
           fontFamily: 'Inter',
           scaffoldBackgroundColor: AppColors.background,
         ),
-        // ✅ Aquí definimos solo initialRoute y routes
-        initialRoute: AppRoutes.patientsListScreen,
+        initialRoute: AppRoutes.welcome,
         routes: AppRoutes.routes,
       ),
     );

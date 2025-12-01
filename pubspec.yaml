@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   fl_chart: ^0.68.0
+  shared_preferences: ^2.2.2
 
   # UI
   cupertino_icons: ^1.0.8
