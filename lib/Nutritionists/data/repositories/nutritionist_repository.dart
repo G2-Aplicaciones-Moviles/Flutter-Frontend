@@ -50,7 +50,6 @@ class NutritionistRepository {
     return jsonDecode(res.body);
   }
 
-  /// 🔥 NUEVO → ACTUALIZACIÓN CORRECTA USANDO /nutritionists/{id}
   Future<bool> updateNutritionist(int id, Map<String, dynamic> data) async {
     final token = await AuthSession.getToken();
 

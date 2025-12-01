@@ -61,7 +61,7 @@ class _NutritionistProfileEditPageState
   @override
   Widget build(BuildContext context) {
     final repo = NutritionistRepository();
-    final nutritionistId = widget.data["id"]; // 🔥 MUY IMPORTANTE
+    final nutritionistId = widget.data["id"];
 
     return Scaffold(
       appBar: AppBar(
@@ -75,9 +75,8 @@ class _NutritionistProfileEditPageState
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // =========================
+
             // FOTO DE PERFIL
-            // =========================
             Center(
               child: Stack(
                 children: [
@@ -86,7 +85,6 @@ class _NutritionistProfileEditPageState
                     backgroundColor: Colors.grey[300],
                     backgroundImage: newProfileImage != null
                         ? FileImage(
-                      // ignore: unnecessary_non_null_assertion
                       File(newProfileImage!),
                     )
                         : (widget.data["profilePictureUrl"] == null ||
@@ -134,14 +132,11 @@ class _NutritionistProfileEditPageState
 
             const SizedBox(height: 25),
 
-            // =========================
             // BOTÓN GUARDAR
-            // =========================
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  // 🔥 ARMAR JSON PARA UPDATE
                   final updatedData = {
                     "fullName": fullNameCtrl.text.trim(),
                     "licenseNumber": licenseCtrl.text.trim(),

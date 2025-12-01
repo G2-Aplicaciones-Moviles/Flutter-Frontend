@@ -18,7 +18,7 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     final pages = [
       NutritionistProfileView(
-        key: ValueKey(DateTime.now()), // 🔥 fuerza rebuild al volver
+        key: ValueKey(DateTime.now()),
         userId: widget.userId,
       ),
       const Center(child: Text("Gestión de Planes (pendiente)")),
