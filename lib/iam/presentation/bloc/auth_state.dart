@@ -15,7 +15,10 @@ class AuthNeedsProfile extends AuthState {
   AuthNeedsProfile(this.userId);
 }
 
-class AuthRegistered extends AuthState {}
+class AuthRegistered extends AuthState {
+  final int userId;
+  AuthRegistered(this.userId);
+}
 
 class AuthError extends AuthState {
   final String message;

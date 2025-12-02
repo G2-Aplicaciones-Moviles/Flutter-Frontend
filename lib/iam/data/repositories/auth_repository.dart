@@ -25,7 +25,7 @@ class AuthRepository {
     return null;
   }
 
-  Future<bool> register(RegisterRequest request) async {
+  Future<int?> register(RegisterRequest request) async {
     final url = Uri.parse("$baseUrl/sign-up");
 
     final res = await http.post(
@@ -34,6 +34,10 @@ class AuthRepository {
       body: jsonEncode(request.toJson()),
     );
 
-    return res.statusCode == 201;
+    if (res.statusCode == 201) {
+      final data = jsonDecode(res.body);
+      return data["id"] as int?;
+    }
+    return null;
   }
 }

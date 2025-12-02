@@ -44,7 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final ok = await repo.register(
+      final userId = await repo.register(
         RegisterRequest(
           event.email,
           event.password,
@@ -52,12 +52,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
 
-      if (!ok) {
+      if (userId == null) {
         emit(AuthError("No se pudo registrar usuario"));
         return;
       }
 
-      emit(AuthRegistered());
+      emit(AuthRegistered(userId));
     } catch (e) {
       emit(AuthError("Error interno: $e"));
     }

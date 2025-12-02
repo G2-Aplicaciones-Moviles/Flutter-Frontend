@@ -17,7 +17,6 @@ class CreateNutritionistProfilePage extends StatefulWidget {
 
 class _CreateNutritionistProfilePageState
     extends State<CreateNutritionistProfilePage> {
-
   final fullNameCtrl = TextEditingController();
   final licenseCtrl = TextEditingController();
   final specialtyCtrl = TextEditingController();
@@ -35,13 +34,17 @@ class _CreateNutritionistProfilePageState
         elevation: 0,
         foregroundColor: Colors.black,
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: BlocConsumer<NutritionistBloc, NutritionistState>(
           listener: (context, state) {
             if (state is NutritionistCreated) {
-              Navigator.pushReplacementNamed(context, "/home");
+              // ✅ IMPORTANTE: pasar el userId al Home
+              Navigator.pushReplacementNamed(
+                context,
+                "/home",
+                arguments: widget.userId,
+              );
             }
 
             if (state is NutritionistError) {
@@ -53,14 +56,12 @@ class _CreateNutritionistProfilePageState
               );
             }
           },
-
           builder: (context, state) {
             final loading = state is NutritionistLoading;
 
             return SingleChildScrollView(
               child: Column(
                 children: [
-
                   const Text(
                     "Completar Perfil",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -105,9 +106,11 @@ class _CreateNutritionistProfilePageState
                             fullName: fullNameCtrl.text.trim(),
                             licenseNumber: licenseCtrl.text.trim(),
                             specialty: specialtyCtrl.text.trim(),
-                            yearsExperience: int.tryParse(yearsCtrl.text) ?? 0,
+                            yearsExperience:
+                            int.tryParse(yearsCtrl.text) ?? 0,
                             bio: bioCtrl.text.trim(),
-                            acceptingNewPatients: acceptingNewPatients,
+                            acceptingNewPatients:
+                            acceptingNewPatients,
                           ),
                         );
                       },
@@ -121,7 +124,6 @@ class _CreateNutritionistProfilePageState
                       ),
                     ),
                   ),
-
                 ],
               ),
             );
