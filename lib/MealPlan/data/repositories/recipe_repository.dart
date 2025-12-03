@@ -28,9 +28,9 @@ class RecipeRepository {
   }
 
   Future<bool> addRecipeToMealPlan(
-    int mealPlanId,
-    AddRecipeToMealPlanRequest request,
-  ) async {
+      int mealPlanId,
+      AddRecipeToMealPlanRequest request,
+      ) async {
     final url = Uri.parse("$baseUrl/meal-plan/$mealPlanId/entries");
     final token = await AuthSession.getToken();
 
@@ -43,7 +43,6 @@ class RecipeRepository {
       body: jsonEncode(request.toJson()),
     );
 
-    // Éxito si statusCode es 200 o 201
     return res.statusCode == 200 || res.statusCode == 201;
   }
 }

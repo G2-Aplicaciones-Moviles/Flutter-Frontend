@@ -17,4 +17,3 @@ class RecipeError extends RecipeState {
   final String message;
   RecipeError(this.message);
 }
-

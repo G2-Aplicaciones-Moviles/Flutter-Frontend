@@ -6,13 +6,6 @@ import '../../data/repositories/UserProfileRepository.dart';
 part 'PatientsEvent.dart';
 part 'PatientsState.dart';
 
-
-
-
-
-
-
-
 class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
   final PatientsRepository patientsRepo = PatientsRepository();
   final UserProfileRepository profileRepo = UserProfileRepository();

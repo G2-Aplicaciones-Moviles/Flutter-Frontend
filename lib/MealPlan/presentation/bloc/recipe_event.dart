@@ -17,4 +17,3 @@ class AddRecipeToMealPlanEvent extends RecipeEvent {
     required this.userId,
   });
 }
-

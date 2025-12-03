@@ -69,6 +69,20 @@ class _MainLayoutState extends State<MainLayout> {
               },
             ),
 
+            // RECETAS
+            ListTile(
+              leading: const Icon(Icons.restaurant_menu),
+              title: const Text("Mis Recetas"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(
+                  context,
+                  "/recipes-list",
+                  arguments: widget.userId, // nutritionistId
+                );
+              },
+            ),
+
             // PACIENTES (sigue usando este layout)
             ListTile(
               leading: const Icon(Icons.groups),

@@ -20,6 +20,14 @@ import '../MealPlan/presentation/pages/meal_plan_detail_page.dart';
 import '../MealPlan/presentation/pages/add_recipes_page.dart';
 import '../MealPlan/data/models/meal_plan_model.dart';
 
+// Recipes
+import '../recipes/presentation/pages/recipes_list_page.dart';
+import '../recipes/presentation/pages/create_recipe_page.dart';
+import '../recipes/presentation/pages/recipe_add_ingredients_page.dart';
+import '../recipes/presentation/bloc/recipes_bloc.dart';
+import '../recipes/presentation/pages/recipe_detail_page.dart';
+
+
 // HOME LAYOUT
 import '../screens/home/main_layout.dart';
 
@@ -34,6 +42,11 @@ class AppRoutes {
   static const String createMealPlan = '/create-meal-plan';
   static const String mealPlanDetail = '/meal-plan-detail';
   static const String addRecipesToMealPlan = '/add-recipes-to-meal-plan';
+  static const String recipesList = '/recipes-list';
+  static const String createRecipe = '/recipes/create';
+  static const String addIngredients = '/recipes/add-ingredients';
+  static const String recipeDetail = '/recipes/detail';
+
 
   static final Map<String, WidgetBuilder> routes = {
     welcome: (_) => const WelcomePage(),
@@ -155,5 +168,81 @@ class AppRoutes {
         userId: args["userId"] as int,
       );
     },
+
+    recipesList: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: nutritionistId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return BlocProvider(
+        create: (_) => RecipesBloc(),
+        child: RecipesListPage(nutritionistId: args),
+      );
+    },
+
+    createRecipe: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: nutritionistId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return BlocProvider(
+        create: (_) => RecipesBloc(),
+        child: CreateRecipePage(nutritionistId: args),
+      );
+    },
+
+    addIngredients: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: recipeId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return AddIngredientsPage(recipeId: args);
+    },
+
+    recipeDetail: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text("Error: recipeId no recibido",
+                style: TextStyle(color: Colors.red, fontSize: 20)),
+          ),
+        );
+      }
+
+      return BlocProvider(
+        create: (_) => RecipesBloc()..add(LoadRecipeByIdEvent(args)),
+        child: RecipeDetailPage(recipeId: args),
+      );
+    },
+
   };
 }

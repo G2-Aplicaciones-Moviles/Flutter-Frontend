@@ -1,4 +1,4 @@
-import 'package:jameofit_flutter/MealPlan/data/models/recipe_ingredient_model.dart';
+import 'recipe_ingredient_model.dart';
 
 class RecipeModel {
   final int id;
@@ -10,7 +10,7 @@ class RecipeModel {
   final String difficulty;
   final String category;
   final String recipeType;
-  final List<RecipeIngredientModel2> ingredients;
+  final List<RecipeIngredientModel> ingredients;
 
   RecipeModel({
     required this.id,
@@ -30,19 +30,15 @@ class RecipeModel {
 
     return RecipeModel(
       id: json["id"],
-      createdByNutritionistId: json["createdByNutritionistId"] as int?,
-      assignedToProfileId: json["assignedToProfileId"] as int?,
-      name: json["name"] ?? "",
-      description: json["description"] ?? "",
-      preparationTime: json["preparationTime"] ?? 0,
-      difficulty: json["difficulty"] ?? "",
-
-      category: json["category"]?["name"] ?? "Sin categoría",
-      recipeType: json["recipeType"]?["name"] ?? "Sin tipo",
-
-      ingredients: ingr
-          .map((e) => RecipeIngredientModel2.fromJson(e))
-          .toList(),
+      createdByNutritionistId: json["createdByNutritionistId"],
+      assignedToProfileId: json["assignedToProfileId"],
+      name: json["name"],
+      description: json["description"],
+      preparationTime: json["preparationTime"],
+      difficulty: json["difficulty"],
+      category: json["categoryName"],
+      recipeType: json["recipeTypeName"],
+      ingredients: ingr.map((e) => RecipeIngredientModel.fromJson(e)).toList(),
     );
   }
 }

@@ -14,9 +14,9 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
   }
 
   Future<void> _onLoadRecipes(
-    LoadRecipesEvent event,
-    Emitter<RecipeState> emit,
-  ) async {
+      LoadRecipesEvent event,
+      Emitter<RecipeState> emit,
+      ) async {
     emit(RecipeLoading());
 
     try {
@@ -28,9 +28,9 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
   }
 
   Future<void> _onAddRecipeToMealPlan(
-    AddRecipeToMealPlanEvent event,
-    Emitter<RecipeState> emit,
-  ) async {
+      AddRecipeToMealPlanEvent event,
+      Emitter<RecipeState> emit,
+      ) async {
     emit(RecipeLoading());
 
     try {
@@ -57,4 +57,3 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     }
   }
 }
-
