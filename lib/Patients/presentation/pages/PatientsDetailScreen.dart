@@ -12,47 +12,86 @@ class PacienteDetailScreen extends StatelessWidget {
     final profile = paciente.profile;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text(profile?.objectiveName ?? "Paciente"),
+        title: Text(
+          "Paciente",
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        shadowColor: Colors.black.withOpacity(0.1),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // CARD
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Colors.blue[300],
-                    child: const Icon(Icons.person,
-                        color: Colors.white, size: 50),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.blue[400]!,
+                          Colors.blue[600]!,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.blue[300],
+                      child: const Icon(Icons.person,
+                          color: Colors.white, size: 56),
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   _buildInfoField("Género", profile?.gender ?? "--"),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
-                  _buildInfoField("Altura", "${profile?.height ?? '--'} m"),
-                  const SizedBox(height: 16),
-
-                  _buildInfoField("Peso", "${profile?.weight ?? '--'} kg"),
-                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInfoField(
+                            "Altura", "${profile?.height ?? '--'} m"),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildInfoField(
+                            "Peso", "${profile?.weight ?? '--'} kg"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
 
                   _buildInfoField("Actividad",
                       profile?.activityLevelName ?? "Sin datos"),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
                   _buildInfoField(
                       "Objetivo", profile?.objectiveName ?? "Sin objetivo"),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
                   _buildInfoField(
                     "Alergias",
@@ -60,59 +99,40 @@ class PacienteDetailScreen extends StatelessWidget {
                         ? profile!.allergyNames.join(", ")
                         : "Ninguna",
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            // Botón Mensaje
             SizedBox(
               width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
+              height: 54,
+              child: ElevatedButton.icon(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4A92FF),
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shadowColor: const Color(0xFF4A92FF).withOpacity(0.3),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Text(
+                icon: const Icon(Icons.message_outlined, size: 20),
+                label: const Text(
                   'Mandar mensaje',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(height: 12),
 
-            // Botón Progreso
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF4A92FF), width: 1.5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Ver Progreso',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF4A92FF),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -123,22 +143,44 @@ class PacienteDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 16,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A92FF),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87)),
-        const SizedBox(height: 8),
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: Text(
             value,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
