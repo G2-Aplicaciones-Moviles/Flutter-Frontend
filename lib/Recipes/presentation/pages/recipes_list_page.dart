@@ -2,16 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/recipes_bloc.dart';
 
-class RecipesListPage extends StatelessWidget {
+class RecipesListPage extends StatefulWidget {
   final int nutritionistId;
 
   const RecipesListPage({super.key, required this.nutritionistId});
+
+  @override
+  State<RecipesListPage> createState() => _RecipesListPageState();
+}
+
+class _RecipesListPageState extends State<RecipesListPage> {
+  late RecipesBloc recipesBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    recipesBloc = RecipesBloc()
+      ..add(LoadTemplatesByNutritionistEvent(widget.nutritionistId));
+  }
+
+  @override
+  void dispose() {
+    recipesBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         BlocBuilder<RecipesBloc, RecipesState>(
+          bloc: recipesBloc,
           builder: (context, state) {
             if (state is RecipesLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -108,7 +129,6 @@ class RecipesListPage extends StatelessWidget {
           },
         ),
 
-        // ✔ FAB flotante manual (porque no hay Scaffold)
         Positioned(
           bottom: 20,
           right: 20,
@@ -117,13 +137,12 @@ class RecipesListPage extends StatelessWidget {
               await Navigator.pushNamed(
                 context,
                 "/recipes/create",
-                arguments: nutritionistId,
+                arguments: widget.nutritionistId,
               );
 
-              // Refrescar recetas luego de crear
-              context
-                  .read<RecipesBloc>()
-                  .add(LoadTemplatesByNutritionistEvent(nutritionistId));
+              recipesBloc.add(
+                LoadTemplatesByNutritionistEvent(widget.nutritionistId),
+              );
             },
             label: const Text("Agregar Receta"),
             icon: const Icon(Icons.add),

@@ -22,7 +22,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final prepCtrl = TextEditingController();
 
   String selectedDifficulty = "Fácil";
-
   int? selectedCategoryId;
   int? selectedTypeId;
 
@@ -69,7 +68,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           : BlocConsumer<RecipesBloc, RecipesState>(
         listener: (context, state) {
           if (state is RecipeCreated) {
-            Navigator.pop(context);
+            /// 🔥 DEVOLVER `true` PARA INDICAR "se creó"
+            Navigator.pop(context, true);
           }
         },
         builder: (context, state) {
@@ -79,7 +79,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // Imagen
                 Container(
                   height: 160,
                   width: double.infinity,
@@ -106,9 +105,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                   "Dificultad",
                   ["Fácil", "Medio", "Difícil"],
                   selectedDifficulty,
-                      (v) {
-                    setState(() => selectedDifficulty = v!);
-                  },
+                      (v) => setState(() => selectedDifficulty = v!),
                 ),
 
                 _dropdown(
@@ -119,9 +116,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       .name,
                       (v) {
                     setState(() {
-                      selectedCategoryId = categories
-                          .firstWhere((c) => c.name == v)
-                          .id;
+                      selectedCategoryId =
+                          categories.firstWhere((c) => c.name == v).id;
                     });
                   },
                 ),
@@ -134,9 +130,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       .name,
                       (v) {
                     setState(() {
-                      selectedTypeId = recipeTypes
-                          .firstWhere((t) => t.name == v)
-                          .id;
+                      selectedTypeId =
+                          recipeTypes.firstWhere((t) => t.name == v).id;
                     });
                   },
                 ),
@@ -166,8 +161,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    minimumSize: const Size(double.infinity, 48),
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize:
+                    const Size(double.infinity, 48),
                   ),
                   child: Text(
                     loading ? "Guardando..." : "Crear Receta",
@@ -182,12 +179,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     );
   }
 
-  Widget _field(
-      String label,
-      TextEditingController ctrl, {
-        int maxLines = 1,
-        TextInputType type = TextInputType.text,
-      }) {
+  Widget _field(String label, TextEditingController ctrl,
+      {int maxLines = 1, TextInputType type = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
@@ -196,7 +189,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         keyboardType: type,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
@@ -214,10 +209,15 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         value: selectedValue,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .map((e) => DropdownMenuItem(
+          value: e,
+          child: Text(e),
+        ))
             .toList(),
         onChanged: onChanged,
       ),

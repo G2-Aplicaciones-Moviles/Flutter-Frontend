@@ -95,12 +95,9 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                 ),
               );
 
-              // Ahora te regresa a la lista, NO a agregar recetas
-              Navigator.pushReplacementNamed(
-                context,
-                "/meal-plans-list",
-                arguments: widget.userId,
-              );
+              /// 🔥 SOLUCIÓN DEFINITIVA 🔥
+              /// Volvemos al MainLayout, NO a la ruta directa
+              Navigator.pop(context, true);
             }
 
             if (state is MealPlanError) {
@@ -151,7 +148,8 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
 
                     const SizedBox(height: 24),
 
-                    const Text("Nombre", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text("Nombre",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _nameController,
@@ -159,13 +157,17 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                         hintText: "Ej: Plan Semanal de Nutrición",
                         filled: true,
                         fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (v) => v!.trim().isEmpty ? "El nombre es requerido" : null,
+                      validator: (v) =>
+                      v!.trim().isEmpty ? "El nombre es requerido" : null,
                     ),
 
                     const SizedBox(height: 16),
-                    const Text("Descripción", style: TextStyle(fontWeight: FontWeight.bold)),
+
+                    const Text("Descripción",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _descriptionController,
@@ -174,14 +176,18 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                         hintText: "Describe los objetivos del plan",
                         filled: true,
                         fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (v) => v!.trim().isEmpty ? "La descripción es requerida" : null,
+                      validator: (v) => v!.trim().isEmpty
+                          ? "La descripción es requerida"
+                          : null,
                     ),
 
                     const SizedBox(height: 16),
 
-                    const Text("Categoría", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text("Categoría",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _categoryController,
@@ -189,14 +195,18 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                         hintText: "Ej: Vegetariano, Bajo en sodio",
                         filled: true,
                         fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (v) => v!.trim().isEmpty ? "La categoría es requerida" : null,
+                      validator: (v) => v!.trim().isEmpty
+                          ? "La categoría es requerida"
+                          : null,
                     ),
 
                     const SizedBox(height: 16),
 
-                    const Text("Tags", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text("Tags",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
 
                     Row(
@@ -208,14 +218,16 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                               hintText: "Ej: Deportista, Familiar",
                               filled: true,
                               fillColor: Colors.grey[100],
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                             onFieldSubmitted: (_) => _addTag(),
                           ),
                         ),
                         const SizedBox(width: 8),
                         IconButton(
-                          icon: const Icon(Icons.add_circle, color: Colors.blue, size: 32),
+                          icon: const Icon(Icons.add_circle,
+                              color: Colors.blue, size: 32),
                           onPressed: _addTag,
                         ),
                       ],
@@ -224,13 +236,13 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                     if (_tags.isNotEmpty)
                       Wrap(
                         spacing: 8,
-                        children: _tags.map(
-                              (tag) => Chip(
-                            label: Text(tag),
-                            deleteIcon: const Icon(Icons.close),
-                            onDeleted: () => _removeTag(tag),
-                          ),
-                        ).toList(),
+                        children: _tags
+                            .map((tag) => Chip(
+                          label: Text(tag),
+                          deleteIcon: const Icon(Icons.close),
+                          onDeleted: () => _removeTag(tag),
+                        ))
+                            .toList(),
                       ),
 
                     const SizedBox(height: 24),
@@ -238,13 +250,15 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: isLoading ? null : () => _submitForm(context),
+                        onPressed:
+                        isLoading ? null : () => _submitForm(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(
+                            color: Colors.white)
                             : const Text("Crear Plan Alimenticio"),
                       ),
                     ),
