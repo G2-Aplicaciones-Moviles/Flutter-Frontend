@@ -45,4 +45,18 @@ class RecipeRepository {
 
     return res.statusCode == 200 || res.statusCode == 201;
   }
+
+  Future<RecipeModel?> getRecipeById(int id) async {
+    final token = await AuthSession.getToken();
+
+    final res = await http.get(
+      Uri.parse("$baseUrl/recipes/$id"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (res.statusCode != 200) return null;
+
+    return RecipeModel.fromJson(jsonDecode(res.body));
+  }
+
 }

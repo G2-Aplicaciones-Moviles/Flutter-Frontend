@@ -22,3 +22,9 @@ class MealPlanError extends MealPlanState {
   final String message;
   MealPlanError(this.message);
 }
+
+class MealPlanLoaded extends MealPlanState {
+  final MealPlanModel mealPlan;
+  MealPlanLoaded(this.mealPlan);
+}
+

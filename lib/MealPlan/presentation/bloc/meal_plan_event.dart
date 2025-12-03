@@ -20,4 +20,15 @@ class DeleteMealPlanEvent extends MealPlanEvent {
   final int nutritionistUserId;
 
   DeleteMealPlanEvent(this.mealPlanId, this.nutritionistUserId);
+
 }
+
+class GetMealPlanByIdEvent extends MealPlanEvent {
+  final int mealPlanId;
+  final int nutritionistUserId;
+
+  GetMealPlanByIdEvent(this.mealPlanId, this.nutritionistUserId);
+}
+
+
+

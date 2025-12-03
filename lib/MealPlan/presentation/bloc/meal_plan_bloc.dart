@@ -11,6 +11,7 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
     on<CreateMealPlanEvent>(_onCreateMealPlan);
     on<LoadMealPlansEvent>(_onLoadMealPlans);
     on<DeleteMealPlanEvent>(_onDeleteMealPlan);
+    on<GetMealPlanByIdEvent>(_onGetMealPlanById);
   }
 
   Future<void> _onCreateMealPlan(
@@ -77,4 +78,26 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
       emit(MealPlanError("Error interno: $e"));
     }
   }
+
+  Future<void> _onGetMealPlanById(
+      GetMealPlanByIdEvent event,
+      Emitter<MealPlanState> emit,
+      ) async {
+    emit(MealPlanLoading());
+
+    try {
+      final result = await repo.getMealPlanById(event.mealPlanId);
+
+      if (result == null) {
+        emit(MealPlanError("No se pudo cargar el plan"));
+        return;
+      }
+
+      emit(MealPlanLoaded(result));
+    } catch (e) {
+      emit(MealPlanError("Error interno: $e"));
+    }
+  }
+
+
 }

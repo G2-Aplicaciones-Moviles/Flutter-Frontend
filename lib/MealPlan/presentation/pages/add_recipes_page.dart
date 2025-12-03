@@ -116,6 +116,10 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         body: BlocConsumer<RecipeBloc, RecipeState>(
           listener: (context, state) {
@@ -126,6 +130,7 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
                   backgroundColor: Colors.green,
                 ),
               );
+
               context.read<RecipeBloc>().add(LoadRecipesEvent());
             }
 
@@ -146,7 +151,6 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
             if (state is RecipesLoaded) {
               var recipes = state.recipes;
 
-              // Filtrado solo por nombre
               if (searchQuery.isNotEmpty) {
                 recipes = recipes
                     .where(
@@ -194,7 +198,7 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
                     ),
                   ),
 
-                  // Buscador por nombre
+                  // Buscador
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -214,7 +218,7 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
                     ),
                   ),
 
-                  // Listado de recetas filtradas
+                  // Lista de recetas
                   Expanded(
                     child: recipes.isEmpty
                         ? const Center(child: Text("No hay recetas disponibles"))
@@ -246,34 +250,6 @@ class _AddRecipesToMealPlanPageState extends State<AddRecipesToMealPlanPage> {
                           ),
                         );
                       },
-                    ),
-                  ),
-
-                  // Botón finalizar
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            "/meal-plans-list",
-                            arguments: widget.userId,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          "Finalizar y ver mis planes",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
                     ),
                   ),
                 ],

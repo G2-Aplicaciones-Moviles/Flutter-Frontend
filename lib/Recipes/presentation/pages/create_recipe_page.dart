@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../bloc/recipes_bloc.dart';
 import '../../data/models/recipe_request.dart';
+import '../../data/models/category_model.dart';
+import '../../data/models/recipe_type_model.dart';
+import '../../data/repositories/metadata_repository.dart';
 
 class CreateRecipePage extends StatefulWidget {
   final int nutritionistId;
@@ -18,8 +22,37 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final prepCtrl = TextEditingController();
 
   String selectedDifficulty = "Fácil";
-  int selectedCategory = 1;
-  int selectedType = 1;
+
+  int? selectedCategoryId;
+  int? selectedTypeId;
+
+  List<CategoryModel> categories = [];
+  List<RecipeTypeModel> recipeTypes = [];
+
+  bool loadingMetadata = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadMetadata();
+  }
+
+  Future<void> loadMetadata() async {
+    final repo = RecipeMetadataRepository();
+
+    final catList = await repo.getCategories();
+    final typeList = await repo.getRecipeTypes();
+
+    setState(() {
+      categories = catList;
+      recipeTypes = typeList;
+
+      if (categories.isNotEmpty) selectedCategoryId = categories.first.id;
+      if (recipeTypes.isNotEmpty) selectedTypeId = recipeTypes.first.id;
+
+      loadingMetadata = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +64,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         foregroundColor: Colors.black,
       ),
 
-      body: BlocConsumer<RecipesBloc, RecipesState>(
+      body: loadingMetadata
+          ? const Center(child: CircularProgressIndicator())
+          : BlocConsumer<RecipesBloc, RecipesState>(
         listener: (context, state) {
           if (state is RecipeCreated) {
             Navigator.pop(context);
           }
         },
-
         builder: (context, state) {
           final loading = state is RecipesLoading;
 
@@ -53,7 +87,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.yellow.shade700,
                     image: const DecorationImage(
-                      image: AssetImage("assets/food.png"),
+                      image: AssetImage("assets/images/food.png"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -63,24 +97,49 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
                 _field("Nombre de la receta", nameCtrl),
                 _field("Descripción", descCtrl, maxLines: 3),
-                _field("Tiempo de preparación (min)", prepCtrl, type: TextInputType.number),
+                _field("Tiempo de preparación (min)", prepCtrl,
+                    type: TextInputType.number),
 
                 const SizedBox(height: 12),
 
-                _dropdown("Dificultad", ["Fácil", "Medio", "Difícil"], (v) {
-                  selectedDifficulty = v!;
-                  setState(() {});
-                }),
+                _dropdown(
+                  "Dificultad",
+                  ["Fácil", "Medio", "Difícil"],
+                  selectedDifficulty,
+                      (v) {
+                    setState(() => selectedDifficulty = v!);
+                  },
+                ),
 
-                _dropdown("Categoría", ["1", "2", "3"], (v) {
-                  selectedCategory = int.parse(v!);
-                  setState(() {});
-                }),
+                _dropdown(
+                  "Categoría",
+                  categories.map((c) => c.name).toList(),
+                  categories
+                      .firstWhere((c) => c.id == selectedCategoryId)
+                      .name,
+                      (v) {
+                    setState(() {
+                      selectedCategoryId = categories
+                          .firstWhere((c) => c.name == v)
+                          .id;
+                    });
+                  },
+                ),
 
-                _dropdown("Tipo de receta", ["1", "2"], (v) {
-                  selectedType = int.parse(v!);
-                  setState(() {});
-                }),
+                _dropdown(
+                  "Tipo de receta",
+                  recipeTypes.map((t) => t.name).toList(),
+                  recipeTypes
+                      .firstWhere((t) => t.id == selectedTypeId)
+                      .name,
+                      (v) {
+                    setState(() {
+                      selectedTypeId = recipeTypes
+                          .firstWhere((t) => t.name == v)
+                          .id;
+                    });
+                  },
+                ),
 
                 const SizedBox(height: 20),
 
@@ -91,14 +150,19 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                     final request = RecipeRequest(
                       name: nameCtrl.text,
                       description: descCtrl.text,
-                      preparationTime: int.tryParse(prepCtrl.text) ?? 0,
+                      preparationTime:
+                      int.tryParse(prepCtrl.text) ?? 0,
                       difficulty: selectedDifficulty,
-                      categoryId: selectedCategory,
-                      recipeTypeId: selectedType,
+                      categoryId: selectedCategoryId!,
+                      recipeTypeId: selectedTypeId!,
                     );
 
                     context.read<RecipesBloc>().add(
-                        CreateTemplateEvent(widget.nutritionistId, request));
+                      CreateTemplateEvent(
+                        widget.nutritionistId,
+                        request,
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
@@ -118,8 +182,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     );
   }
 
-  Widget _field(String label, TextEditingController ctrl,
-      {int maxLines = 1, TextInputType type = TextInputType.text}) {
+  Widget _field(
+      String label,
+      TextEditingController ctrl, {
+        int maxLines = 1,
+        TextInputType type = TextInputType.text,
+      }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
@@ -134,15 +202,23 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     );
   }
 
-  Widget _dropdown(String label, List<String> items, void Function(String?) onChanged) {
+  Widget _dropdown(
+      String label,
+      List<String> items,
+      String selectedValue,
+      void Function(String?) onChanged,
+      ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField(
+        value: selectedValue,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        items: items
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList(),
         onChanged: onChanged,
       ),
     );

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Nutritionists/presentation/pages/nutritionist_profile_view.dart';
 import '../../Patients/presentation/pages/PatientsListScreen.dart';
 import '../../MealPlan/presentation/pages/meal_plans_list_page.dart';
+import '../../Recipes/presentation/bloc/recipes_bloc.dart';
+import '../../Recipes/presentation/pages/recipes_list_page.dart';
 
 class MainLayout extends StatefulWidget {
   final int userId;
@@ -18,13 +21,24 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      NutritionistProfileView(
-        key: ValueKey(DateTime.now()),
-        userId: widget.userId,
-      ),
+      NutritionistProfileView(userId: widget.userId),
+
       const PatientsListScreen(),
+
       const Center(child: Text("Mensajería (pendiente)")),
+
+      // MealPlansListPage NO necesita RecipesBloc
+      MealPlansListPage(userId: widget.userId),
+
+      BlocProvider(
+        create: (_) => RecipesBloc()..add(LoadTemplatesByNutritionistEvent(widget.userId)),
+        child: RecipesListPage(
+          key: ValueKey("recipes_${DateTime.now()}"),
+          nutritionistId: widget.userId,
+        ),
+      )
     ];
+
 
     return Scaffold(
       appBar: AppBar(
@@ -33,6 +47,7 @@ class _MainLayoutState extends State<MainLayout> {
         elevation: 0,
         foregroundColor: Colors.black,
       ),
+
       drawer: Drawer(
         child: ListView(
           children: [
@@ -44,7 +59,6 @@ class _MainLayoutState extends State<MainLayout> {
               ),
             ),
 
-            // PERFIL
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text("Perfil"),
@@ -55,35 +69,26 @@ class _MainLayoutState extends State<MainLayout> {
               },
             ),
 
-            // GESTIÓN DE PLANES
             ListTile(
               leading: const Icon(Icons.fitness_center),
               title: const Text("Gestión de Planes"),
+              selected: selectedIndex == 3,
               onTap: () {
+                setState(() => selectedIndex = 3);
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(
-                  context,
-                  "/meal-plans-list",
-                  arguments: widget.userId,
-                );
               },
             ),
 
-            // RECETAS
             ListTile(
               leading: const Icon(Icons.restaurant_menu),
               title: const Text("Mis Recetas"),
+              selected: selectedIndex == 4,
               onTap: () {
+                setState(() => selectedIndex = 4);
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  "/recipes-list",
-                  arguments: widget.userId, // nutritionistId
-                );
               },
             ),
 
-            // PACIENTES (sigue usando este layout)
             ListTile(
               leading: const Icon(Icons.groups),
               title: const Text("Pacientes"),
@@ -94,7 +99,6 @@ class _MainLayoutState extends State<MainLayout> {
               },
             ),
 
-            // MENSAJERÍA
             ListTile(
               leading: const Icon(Icons.message),
               title: const Text("Mensajería"),
@@ -104,6 +108,7 @@ class _MainLayoutState extends State<MainLayout> {
                 Navigator.pop(context);
               },
             ),
+
           ],
         ),
       ),

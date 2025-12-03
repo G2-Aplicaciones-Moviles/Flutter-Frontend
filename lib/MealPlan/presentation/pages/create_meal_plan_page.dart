@@ -65,8 +65,8 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
       );
 
       context.read<MealPlanBloc>().add(
-            CreateMealPlanEvent(widget.userId, request),
-          );
+        CreateMealPlanEvent(widget.userId, request),
+      );
     }
   }
 
@@ -95,14 +95,11 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                 ),
               );
 
-              // Navegar a agregar recetas con el meal plan recién creado
+              // Ahora te regresa a la lista, NO a agregar recetas
               Navigator.pushReplacementNamed(
                 context,
-                "/add-recipes-to-meal-plan",
-                arguments: {
-                  "mealPlan": state.mealPlan,
-                  "userId": widget.userId,
-                },
+                "/meal-plans-list",
+                arguments: widget.userId,
               );
             }
 
@@ -125,7 +122,6 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Icono de menú
                     Center(
                       child: Container(
                         height: 120,
@@ -155,166 +151,101 @@ class _CreateMealPlanPageState extends State<CreateMealPlanPage> {
 
                     const SizedBox(height: 24),
 
-                    // Campo Nombre
-                    const Text(
-                      "Nombre",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Nombre", style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
                         hintText: "Ej: Plan Semanal de Nutrición",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
                         filled: true,
                         fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "El nombre es requerido";
-                        }
-                        return null;
-                      },
+                      validator: (v) => v!.trim().isEmpty ? "El nombre es requerido" : null,
                     ),
 
                     const SizedBox(height: 16),
-
-                    // Campo Descripción
-                    const Text(
-                      "Descripción",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Descripción", style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: 3,
                       decoration: InputDecoration(
-                        hintText:
-                            "Describe los objetivos y características del plan alimenticio",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        hintText: "Describe los objetivos del plan",
                         filled: true,
                         fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "La descripción es requerida";
-                        }
-                        return null;
-                      },
+                      validator: (v) => v!.trim().isEmpty ? "La descripción es requerida" : null,
                     ),
-
 
                     const SizedBox(height: 16),
 
-                    // Campo Categoría
-                    const Text(
-                      "Categoría",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Categoría", style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _categoryController,
                       decoration: InputDecoration(
-                        hintText: "Ej: Vegetariano, Bajo en sodio, etc.",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        hintText: "Ej: Vegetariano, Bajo en sodio",
                         filled: true,
                         fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "La categoría es requerida";
-                        }
-                        return null;
-                      },
+                      validator: (v) => v!.trim().isEmpty ? "La categoría es requerida" : null,
                     ),
 
                     const SizedBox(height: 16),
 
-                    // Campo Tags
-                    const Text(
-                      "Tag",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Tags", style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
+
                     Row(
                       children: [
                         Expanded(
                           child: TextFormField(
                             controller: _tagController,
                             decoration: InputDecoration(
-                              hintText: "Ej: Deportista, Familiar, etc.",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                              hintText: "Ej: Deportista, Familiar",
                               filled: true,
                               fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                             ),
                             onFieldSubmitted: (_) => _addTag(),
                           ),
                         ),
                         const SizedBox(width: 8),
                         IconButton(
+                          icon: const Icon(Icons.add_circle, color: Colors.blue, size: 32),
                           onPressed: _addTag,
-                          icon: const Icon(Icons.add_circle,
-                              color: Colors.blue, size: 32),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 12),
-
-                    // Lista de tags agregados
                     if (_tags.isNotEmpty)
                       Wrap(
                         spacing: 8,
-                        runSpacing: 8,
-                        children: _tags.map((tag) {
-                          return Chip(
+                        children: _tags.map(
+                              (tag) => Chip(
                             label: Text(tag),
-                            deleteIcon: const Icon(Icons.close, size: 18),
+                            deleteIcon: const Icon(Icons.close),
                             onDeleted: () => _removeTag(tag),
-                          );
-                        }).toList(),
+                          ),
+                        ).toList(),
                       ),
 
                     const SizedBox(height: 24),
 
-                    // Botón Crear Plan
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: isLoading
-                            ? null
-                            : () => _submitForm(context),
+                        onPressed: isLoading ? null : () => _submitForm(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
                         ),
                         child: isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text(
-                                "Crear Plan Alimenticio",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text("Crear Plan Alimenticio"),
                       ),
                     ),
                   ],

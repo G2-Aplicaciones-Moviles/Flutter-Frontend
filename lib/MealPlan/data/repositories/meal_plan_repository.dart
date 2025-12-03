@@ -66,4 +66,21 @@ class MealPlanRepository {
 
     return res.statusCode == 200 || res.statusCode == 201 || res.statusCode == 204;
   }
+
+  Future<MealPlanModel?> getMealPlanById(int id) async {
+    final url = Uri.parse("$baseUrl/$id");
+    final token = await AuthSession.getToken();
+
+    final res = await http.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+
+    if (res.statusCode == 200) {
+      return MealPlanModel.fromJson(jsonDecode(res.body));
+    }
+
+    return null;
+  }
+
+
 }
