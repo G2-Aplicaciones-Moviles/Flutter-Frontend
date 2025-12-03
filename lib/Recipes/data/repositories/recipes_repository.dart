@@ -5,7 +5,7 @@ import '../models/recipe_request.dart';
 import '../models/recipe_model.dart';
 
 class RecipesRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1/recipes";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1/recipes";
 
   Future<bool> createRecipeTemplate(int nutritionistId, RecipeRequest request) async {
     final token = await AuthSession.getToken();

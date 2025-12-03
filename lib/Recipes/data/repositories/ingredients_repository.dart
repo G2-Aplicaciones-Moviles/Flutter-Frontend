@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import '../../../iam/services/auth_session.dart';
 
 class IngredientsRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1/ingredients";
-  static const String recipesUrl = "http://10.0.2.2:5000/api/v1/recipes";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1/ingredients";
+  static const String recipesUrl = "http://10.0.2.2:8080/api/v1/recipes";
 
   Future<List<dynamic>> getAllIngredients() async {
     final token = await AuthSession.getToken();

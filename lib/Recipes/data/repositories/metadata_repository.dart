@@ -6,7 +6,7 @@ import '../models/recipe_type_model.dart';
 import '../../../iam/services/auth_session.dart';
 
 class RecipeMetadataRepository {
-  static const baseUrl = "http://10.0.2.2:5000/api/v1";
+  static const baseUrl = "http://10.0.2.2:8080/api/v1";
 
   Future<List<CategoryModel>> getCategories() async {
     final token = await AuthSession.getToken();

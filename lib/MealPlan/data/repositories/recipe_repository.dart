@@ -6,7 +6,7 @@ import '../models/add_recipe_request.dart';
 import '../../../iam/services/auth_session.dart';
 
 class RecipeRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1";
 
   Future<List<RecipeModel>> getAllRecipes() async {
     final url = Uri.parse("$baseUrl/recipes");

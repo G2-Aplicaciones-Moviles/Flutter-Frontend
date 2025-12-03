@@ -6,7 +6,7 @@ import '../models/create_meal_plan_request.dart';
 import '../../../iam/services/auth_session.dart';
 
 class MealPlanRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1/meal-plan";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1/meal-plan";
 
   Future<MealPlanModel?> createMealPlanTemplate(
     int nutritionistUserId,

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../../../iam/services/auth_session.dart';
 
 class NutritionistRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1/nutritionists";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1/nutritionists";
 
   Future<bool> nutritionistExists(int userId) async {
     final token = await AuthSession.getToken();

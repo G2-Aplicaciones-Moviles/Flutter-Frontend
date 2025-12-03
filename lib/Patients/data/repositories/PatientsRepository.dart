@@ -6,7 +6,7 @@ import '../models/NutritionistPatientModel.dart';
 
 class PatientsRepository {
   static const String baseUrl =
-      "http://10.0.2.2:5000/api/v1/nutritionist-patients";
+      "http://10.0.2.2:8080/api/v1/nutritionist-patients";
 
   Future<List<NutritionistPatientModel>> fetchPatients(int nutritionistId) async {
     final url = Uri.parse("$baseUrl/nutritionist/$nutritionistId");

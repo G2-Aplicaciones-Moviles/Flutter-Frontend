@@ -9,6 +9,15 @@ import '../iam/presentation/pages/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../Nutritionists/presentation/bloc/nutritionist_bloc.dart';
 import '../Nutritionists/presentation/pages/create_nutritionist_profile_page.dart';
+import '../Nutritionists/presentation/pages/pending_requests_screen.dart';
+import '../Nutritionists/presentation/pages/patients_with_chat_screen.dart';
+import '../Nutritionists/presentation/pages/chat_screen.dart';
+import '../Nutritionists/presentation/bloc/pending_requests_cubit.dart';
+import '../Nutritionists/presentation/bloc/patients_cubit.dart';
+import '../Nutritionists/presentation/bloc/chat_cubit.dart';
+import '../Nutritionists/data/repositories/nutritionist_requests_repository.dart';
+import '../Nutritionists/data/repositories/chat_contacts_repository.dart';
+import '../Nutritionists/data/repositories/chat_repository.dart';
 
 // Patients
 import '../Patients/presentation/pages/PatientsListScreen.dart';
@@ -46,9 +55,11 @@ class AppRoutes {
   static const String createRecipe = '/recipes/create';
   static const String addIngredients = '/recipes/add-ingredients';
   static const String recipeDetail = '/recipes/detail';
+  static const String pendingRequests = '/pending-requests';
+  static const String patientsWithChat = '/patients-with-chat';
+  static const String chat = '/chat';
 
-
-  static final Map<String, WidgetBuilder> routes = {
+  static Map<String, WidgetBuilder> routes = {
     welcome: (_) => const WelcomePage(),
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
@@ -244,5 +255,85 @@ class AppRoutes {
       );
     },
 
+    // PENDING REQUESTS
+    pendingRequests: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: nutritionistId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return BlocProvider(
+        create: (_) => PendingRequestsCubit(
+          NutritionistRequestsRepository(),
+          ChatContactsRepository(),
+        ),
+        child: PendingRequestsScreen(nutritionistId: args),
+      );
+    },
+
+    // PATIENTS WITH CHAT
+    patientsWithChat: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args == null || args is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: nutritionistId no recibido",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      return BlocProvider(
+        create: (_) => PatientsCubit(ChatContactsRepository()),
+        child: PatientsWithChatScreen(nutritionistId: args),
+      );
+    },
+
+    // CHAT SCREEN
+    chat: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+      if (args == null ||
+          args['nutritionistId'] is! int ||
+          args['patientId'] is! int) {
+        return const Scaffold(
+          body: Center(
+            child: Text(
+              "Error: Parámetros de chat no recibidos",
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+          ),
+        );
+      }
+
+      final nutritionistId = args['nutritionistId'] as int;
+      final patientId = args['patientId'] as int;
+      final patientName = args['patientName'] as String?;
+
+      return BlocProvider(
+        create: (_) => ChatCubit(
+          repository: ChatRepository(),
+          nutritionistId: nutritionistId,
+          patientId: patientId,
+        ),
+        child: ChatScreen(
+          nutritionistId: nutritionistId,
+          patientId: patientId,
+          patientName: patientName,
+        ),
+      );
+    },
   };
 }
+

@@ -6,7 +6,7 @@ import '../models/login_request.dart';
 import '../models/register_request.dart';
 
 class AuthRepository {
-  static const String baseUrl = "http://10.0.2.2:5000/api/v1/authentication";
+  static const String baseUrl = "http://10.0.2.2:8080/api/v1/authentication";
 
   Future<AuthenticatedUserModel?> login(LoginRequest request) async {
     final url = Uri.parse("$baseUrl/sign-in");

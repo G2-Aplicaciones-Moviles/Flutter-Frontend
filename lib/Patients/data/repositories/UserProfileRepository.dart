@@ -6,7 +6,7 @@ import '../models/UserProfileModel.dart';
 
 class UserProfileRepository {
   static const String baseUrl =
-      "http://10.0.2.2:5000/api/v1/user-profiles";
+      "http://10.0.2.2:8080/api/v1/user-profiles";
 
   Future<UserProfileModel?> fetchProfile(int userId) async {
     final url = Uri.parse("$baseUrl/$userId");
