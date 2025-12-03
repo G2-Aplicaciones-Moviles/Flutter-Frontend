@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../../iam/services/auth_session.dart';
 import '../models/NutritionistPatientModel.dart';
 
 class PatientsRepository {
   static const String baseUrl =
       "http://10.0.2.2:5000/api/v1/nutritionist-patients";
 
-  /// Obtiene la lista de pacientes asociados a un nutricionista
   Future<List<NutritionistPatientModel>> fetchPatients(int nutritionistId) async {
     final url = Uri.parse("$baseUrl/nutritionist/$nutritionistId");
+    final token = await AuthSession.getToken(); // ✔ TOKEN REAL
 
     try {
       final response = await http.get(
@@ -17,13 +18,13 @@ class PatientsRepository {
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token", // ✔ TOKEN MANDADO
         },
       );
 
       if (response.statusCode == 200) {
         final List decoded = jsonDecode(response.body);
 
-        // Mapea cada elemento al modelo
         return decoded
             .map((json) => NutritionistPatientModel.fromJson(json))
             .toList();
@@ -35,4 +36,51 @@ class PatientsRepository {
       return [];
     }
   }
+
+  Future<bool> approvePatient(int relationId) async {
+    final token = await AuthSession.getToken();
+    final url = Uri.parse("$baseUrl/$relationId/approve");
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print("❌ Error en approvePatient: $e");
+      return false;
+    }
+  }
+
+  Future<bool> deletePatient(int relationId) async {
+    final token = await AuthSession.getToken();
+
+    final url = Uri.parse(baseUrl); // DELETE no usa path extra
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode({
+          "id": relationId,
+        }),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print("❌ Error en deletePatient: $e");
+      return false;
+    }
+  }
+
 }

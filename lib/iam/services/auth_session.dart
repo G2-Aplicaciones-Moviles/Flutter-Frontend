@@ -23,6 +23,16 @@ class AuthSession {
     return prefs.getInt(_userIdKey);
   }
 
+  static Future<void> saveNutritionistId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("nutritionistId", id);
+  }
+
+  static Future<int?> getNutritionistId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt("nutritionistId");
+  }
+
   /// Limpia todo (al cerrar sesión)
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();

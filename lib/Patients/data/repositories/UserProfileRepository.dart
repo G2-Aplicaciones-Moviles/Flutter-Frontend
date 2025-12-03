@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../../iam/services/auth_session.dart';
 import '../models/UserProfileModel.dart';
 
 class UserProfileRepository {
@@ -9,6 +10,7 @@ class UserProfileRepository {
 
   Future<UserProfileModel?> fetchProfile(int userId) async {
     final url = Uri.parse("$baseUrl/$userId");
+    final token = await AuthSession.getToken(); // ✔ TOKEN REAL
 
     try {
       final response = await http.get(
@@ -16,6 +18,7 @@ class UserProfileRepository {
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token", // ✔ SE ENVÍA TOKEN
         },
       );
 

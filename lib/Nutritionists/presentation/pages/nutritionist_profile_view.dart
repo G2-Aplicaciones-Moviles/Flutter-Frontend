@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../Nutritionists/data/repositories/nutritionist_repository.dart';
+import '../../../iam/services/auth_session.dart';
 import 'nutritionist_profile_edit_page.dart';
 
 class NutritionistProfileView extends StatefulWidget {
@@ -57,6 +58,11 @@ class _NutritionistProfileViewState extends State<NutritionistProfileView> {
         if (data == null) {
           return const Center(child: Text("No se pudo cargar el perfil"));
         }
+
+        final nutritionistId = data["id"];
+        Future.microtask(() {
+          AuthSession.saveNutritionistId(nutritionistId);
+        });
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(20),

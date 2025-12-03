@@ -8,3 +8,17 @@ class FetchPatientsEvent extends PatientsEvent {
 
   FetchPatientsEvent(this.nutritionistId);
 }
+
+class ApprovePatientEvent extends PatientsEvent {
+  final int relationId;
+  final int nutritionistId;
+
+  ApprovePatientEvent(this.relationId, this.nutritionistId);
+}
+
+class DeletePatientEvent extends PatientsEvent {
+  final int relationId;
+  final int nutritionistId;
+
+  DeletePatientEvent(this.relationId, this.nutritionistId);
+}
